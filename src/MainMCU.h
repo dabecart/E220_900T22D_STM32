@@ -7,20 +7,17 @@
 #include "UART.h"
 #include "LoRa.h"
 
-class MainMCU {
-    public:
-    MainMCU(UART_HandleTypeDef* huart1,
-            DMA_HandleTypeDef* hdma_usart1_rx,
-            DMA_HandleTypeDef* hdma_usart1_tx);
-
-    ~MainMCU();
-
-    void mainLoop();
-
+typedef struct MainMCU {
     UART uart;
     LoRa lora;
-};
+} MainMCU;
 
-extern MainMCU* mcu;
+void initMainMCU(UART_HandleTypeDef* huart1,
+                 DMA_HandleTypeDef* hdma_usart1_rx,
+                 DMA_HandleTypeDef* hdma_usart1_tx);
+
+void mainLoop();
+
+extern MainMCU mcu;
 
 #endif // MAIN_MCU_h

@@ -14,8 +14,9 @@
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE",
-                "STM32G431xx",
+                "DEBUG",
                 "USE_HAL_DRIVER",
+                "STM32G431xx",
                 "__CC_ARM"
             ],
             "windowsSdkVersion": "10.0.19041.0",

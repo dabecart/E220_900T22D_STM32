@@ -1,2 +1,2 @@
-src/CircularBuffer.o: ../src/CircularBuffer.cpp ../src/CircularBuffer.h
+src/CircularBuffer.o: ../src/CircularBuffer.c ../src/CircularBuffer.h
 ../src/CircularBuffer.h:

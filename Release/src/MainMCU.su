@@ -1,3 +1,0 @@
-../src/MainMCU.cpp:5:1:MainMCU::MainMCU(UART_HandleTypeDef*, DMA_HandleTypeDef*, DMA_HandleTypeDef*)	8	static
-../src/MainMCU.cpp:13:1:MainMCU::~MainMCU()	8	static
-../src/MainMCU.cpp:15:6:void MainMCU::mainLoop()	0	static

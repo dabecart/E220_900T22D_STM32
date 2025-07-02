@@ -1,8 +1,7 @@
-../src/UART.cpp:14:1:UART::UART(UART_HandleTypeDef*, DMA_HandleTypeDef*, DMA_HandleTypeDef*)	24	static
-../src/UART.cpp:25:1:UART::~UART()	16	static
-../src/UART.cpp:27:6:void UART::update()	16	static
-../src/UART.cpp:42:6:void UART::attachDMAToSerialPort()	16	static
-../src/UART.cpp:53:9:uint8_t UART::sendToUART(uint8_t*, uint16_t)	32	static
-../src/UART.cpp:64:6:void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef*, uint16_t)	24	static
-../src/UART.cpp:80:6:void HAL_UART_TxCpltCallback(UART_HandleTypeDef*)	24	static
-../src/UART.cpp:100:6:void HAL_UART_ErrorCallback(UART_HandleTypeDef*)	24	static
+../src/UART.c:14:6:initUART	24	static
+../src/UART.c:28:6:updateUART	16	static
+../src/UART.c:43:6:attachDMAToUART	16	static
+../src/UART.c:54:9:sendToUART	32	static
+../src/UART.c:65:6:HAL_UARTEx_RxEventCallback	24	static
+../src/UART.c:81:6:HAL_UART_TxCpltCallback	24	static
+../src/UART.c:101:6:HAL_UART_ErrorCallback	24	static
