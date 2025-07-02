@@ -96,7 +96,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_Device_Init();
   /* USER CODE BEGIN 2 */
-  initMainMCU(&huart1, &hdma_usart1_rx, &hdma_usart1_tx);
+  MainMCU mcu(&huart1, &hdma_usart1_rx, &hdma_usart1_tx);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,7 +106,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	mainLoop();
+	  mcu.mainLoop();
   }
   /* USER CODE END 3 */
 }

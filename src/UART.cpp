@@ -11,39 +11,38 @@
 #include "UART.h"
 #include "MainMCU.h"
 
-void initUART(UART* uart,
-              UART_HandleTypeDef*     hUART,
-              DMA_HandleTypeDef*      rxDMA,
-              DMA_HandleTypeDef*      txDMA) {
+UART::UART(UART_HandleTypeDef*     hUART,
+           DMA_HandleTypeDef*      rxDMA,
+           DMA_HandleTypeDef*      txDMA) {
 
-    if(uart == NULL) return;
+    this->hUART        = hUART;
+    this->rxDMA        = rxDMA; 
+    this->txDMA        = txDMA;
 
-    uart->hUART        = hUART;
-    uart->rxDMA        = rxDMA; 
-    uart->txDMA        = txDMA;
-
-    attachDMAToUART(uart);
+    attachDMAToSerialPort();
 }
 
-void updateUART(UART* uart) {
-    if(uart->txSend) {
-        // Lock the buffer until the DMA has sent the message. The callback will unlock it.
-        uart->TXBuffer.locked = 1;
+UART::~UART() {}
 
-        HAL_UART_Transmit_DMA(uart->hUART, uart->TXBuffer.data, uart->TXBuffer.len);
+void UART::update() {
+    if(txSend) {
+        // Lock the buffer until the DMA has sent the message. The callback will unlock it.
+        TXBuffer.locked = 1;
+
+        HAL_UART_Transmit_DMA(hUART, TXBuffer.data, TXBuffer.len);
 
         // Disables an interruption that gets called half in transmission.
-        __HAL_DMA_DISABLE_IT(uart->txDMA, DMA_IT_HT);
+        __HAL_DMA_DISABLE_IT(txDMA, DMA_IT_HT);
         
         // The buffer has been sent!
-        uart->txSend = 0;
+        txSend = 0;
     }
 }
 
-void attachDMAToUART(UART* uart) {
+void UART::attachDMAToSerialPort() {
     // This function takes the buffer directly as a circular one. It won't update the indices of the 
     // struct, so that will be left upon us. 
-    HAL_UARTEx_ReceiveToIdle_DMA(uart->hUART, uart->RXBuffer.data, uart->RXBuffer.size);
+    HAL_UARTEx_ReceiveToIdle_DMA(hUART, RXBuffer.data, RXBuffer.size);
 
     // // This disables an interruption that triggers when the buffer gets filled to its full size.
     // __HAL_DMA_DISABLE_IT(pstUART->rxDMA, DMA_IT_TC);
@@ -51,10 +50,10 @@ void attachDMAToUART(UART* uart) {
     // __HAL_DMA_DISABLE_IT(pstUART->rxDMA, DMA_IT_HT);
 }
 
-uint8_t sendToUART(UART* uart, uint8_t* pucMessage, uint16_t usMessageLength) {
+uint8_t UART::sendToUART(uint8_t* pucMessage, uint16_t usMessageLength) {
     // Push the data to the array.
-    uint8_t readyToSend = pushN_cb(&uart->TXBuffer, pucMessage, usMessageLength);
-    if(readyToSend) uart->txSend = 1;
+    uint8_t readyToSend = TXBuffer.pushN(pucMessage, usMessageLength);
+    if(readyToSend) txSend = 1;
     return readyToSend;
 }
 
@@ -64,12 +63,12 @@ uint8_t sendToUART(UART* uart, uint8_t* pucMessage, uint16_t usMessageLength) {
 ***************************************************************************************************/
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *hUART, uint16_t newHeadIndex) {   
     UART* referencedUART = NULL;
-    if(hUART == mcu.uart.hUART) {
-        referencedUART = &mcu.uart;
+    if(hUART == mcu->uart.hUART) {
+        referencedUART = &mcu->uart;
     } // Add more UART handlers if used.
 
     if(referencedUART != NULL) {
-        updateIndices_cb(&referencedUART->RXBuffer, newHeadIndex);
+        referencedUART->RXBuffer.updateIndices(newHeadIndex);
         referencedUART->rxSend = 1;
     }
 }
@@ -80,8 +79,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *hUART, uint16_t newHeadIndex
 ***************************************************************************************************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUART) {
     UART* referencedUART = NULL;
-    if(hUART == mcu.uart.hUART) {
-        referencedUART = &mcu.uart;
+    if(hUART == mcu->uart.hUART) {
+        referencedUART = &mcu->uart;
     } // Add more UART handlers if used.
 
     if(referencedUART != NULL) {
@@ -90,7 +89,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUART) {
         // The transmission doesn't use circular buffers, but we're using them so that we don't have
         // to implement a "simple buffer". To convert a circular buffer to simple buffer, just 
         // delete its content and restart the indices.
-        empty_cb(&referencedUART->TXBuffer);
+        referencedUART->TXBuffer.empty();
     }
 }
 
@@ -100,20 +99,20 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUART) {
 ***************************************************************************************************/
 void HAL_UART_ErrorCallback(UART_HandleTypeDef* hUART) {
     UART* referencedUART = NULL;
-    if(hUART == mcu.uart.hUART) {
-        referencedUART = &mcu.uart;
+    if(hUART == mcu->uart.hUART) {
+        referencedUART = &mcu->uart;
     } // Add more UART handlers if used.
 
     if(referencedUART != NULL) {
-        empty_cb(&referencedUART->TXBuffer);
+        referencedUART->TXBuffer.empty();
         referencedUART->TXBuffer.locked = 0;
         referencedUART->txSend = 0;
 
-        empty_cb(&referencedUART->RXBuffer);
+        referencedUART->RXBuffer.empty();
         referencedUART->RXBuffer.locked = 0;
         referencedUART->rxSend = 0;
 
-        attachDMAToUART(referencedUART);
+        referencedUART->attachDMAToSerialPort();
     }
 }
 

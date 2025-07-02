@@ -11,7 +11,7 @@
 #define LORA_HEADER_LEN 3   // command, startAddress, length
 #define LORA_MAX_MSG_LEN 200
 
-typedef enum LoRaStatus {
+enum LoRaStatus {
   LORA_SUCCESS = 1,
   LORA_ERR_UNKNOWN,
   LORA_ERR_INVALID_PARAM,
@@ -21,16 +21,17 @@ typedef enum LoRaStatus {
   LORA_ERR_WRONG_FORMAT,
   LORA_ERR_INVALID_RESPONSE,
   LORA_ERR_NO_NEW_MSG
-} LoRaStatus;
+};
 
-typedef enum LoRaUARTParity {
+enum LoRaUARTParity {
   MODE_00_8N1 = 0b00,
   MODE_01_8O1 = 0b01,
   MODE_10_8E1 = 0b10,
   MODE_11_8N1 = 0b11
-} LoRaUARTParity;
+};
 
-typedef enum LoRaUARTBaudrate {
+enum LoRaUARTBaudrate
+{
   UART_BPS_1200 = 0b000,
   UART_BPS_2400 = 0b001,
   UART_BPS_4800 = 0b010,
@@ -39,9 +40,10 @@ typedef enum LoRaUARTBaudrate {
   UART_BPS_38400 = 0b101,
   UART_BPS_57600 = 0b110,
   UART_BPS_115200 = 0b111
-} LoRaUARTBaudrate;
+};
 
-typedef enum LoRaAirDataRate {
+enum LoRaAirDataRate
+{
   AIR_DATA_RATE_000_24 = 0b000,
   AIR_DATA_RATE_001_24 = 0b001,
   AIR_DATA_RATE_010_24 = 0b010,
@@ -50,21 +52,21 @@ typedef enum LoRaAirDataRate {
   AIR_DATA_RATE_101_192 = 0b101,
   AIR_DATA_RATE_110_384 = 0b110,
   AIR_DATA_RATE_111_625 = 0b111
-} LoRaAirDataRate;
+};
 
-typedef enum LoRaSubPacketSetting {
+enum LoRaSubPacketSetting {
     SPS_200_00 = 0b00,
     SPS_128_01 = 0b01,
     SPS_064_10 = 0b10,
     SPS_032_11 = 0b11
-} LoRaSubPacketSetting;
+};
 
-typedef enum LoRaRSSIAmbientNoiseEnable {
+enum LoRaRSSIAmbientNoiseEnable {
     RSSI_AMBIENT_NOISE_ENABLED = 0b1,
     RSSI_AMBIENT_NOISE_DISABLED = 0b0
-} LoRaRSSIAmbientNoiseEnable;
+};
 
-typedef enum LoRaWORPeriod {
+enum LoRaWORPeriod {
     WOR_500_000 = 0b000,
     WOR_1000_001 = 0b001,
     WOR_1500_010 = 0b010,
@@ -73,31 +75,31 @@ typedef enum LoRaWORPeriod {
     WOR_3000_101 = 0b101,
     WOR_3500_110 = 0b110,
     WOR_4000_111 = 0b111
-} LoRaWORPeriod;
+};
 
-typedef enum LoRaLBTEnable {
+enum LoRaLBTEnable {
     LBT_ENABLED = 0b1,
     LBT_DISABLED = 0b0
-} LoRaLBTEnable;
+};
 
-typedef enum LoRaRSSIEnable {
+enum LoRaRSSIEnable {
     RSSI_ENABLED = 0b1,
     RSSI_DISABLED = 0b0
-} LoRaRSSIEnable;
+};
 
-typedef enum LoRaFixedTransmission {
+enum LoRaFixedTransmission {
   FT_TRANSPARENT_TRANSMISSION = 0b0,
   FT_FIXED_TRANSMISSION = 0b1
-} LoRaFixedTransmission;
+};
 
-typedef enum LoRaTransmissionPower { // in dBm
+enum LoRaTransmissionPower { // in dBm
       POWER_22 = 0b00,
       POWER_17 = 0b01,
       POWER_13 = 0b10,
       POWER_10 = 0b11
-} LoRaTransmissionPower;
+};
 
-typedef enum LoRaMode {
+enum LoRaMode {
     MODE_0_NORMAL           = 0,
     MODE_0_TRANSMISSION     = 0,
     MODE_1_WOR_TRANSMITTER  = 1,
@@ -107,18 +109,19 @@ typedef enum LoRaMode {
     MODE_3_CONFIGURATION    = 3,
     MODE_3_PROGRAM          = 3,
     MODE_3_SLEEP            = 3,
-} LoRaMode;
+    MODE_INIT               = 0xFF
+};
 
-typedef enum LoRaCommand {
+enum LoRaCommand {
     WRITE_CFG_PWR_DWN_SAVE      = 0xC0, // Saves configuration to NON-volatile memory.
     READ_CONFIGURATION          = 0xC1,
     WRITE_CFG_PWR_DWN_LOSE      = 0xC2, // Saves configuration to volatile memory.
     WRONG_FORMAT                = 0xFF,
     RETURNED_COMMAND            = 0xC1,
     SPECIAL_WIFI_CONF_COMMAND   = 0xCF
-} LoRaCommand;
+};
 
-typedef enum LoRaRegAdds {
+enum LoRaRegAdds {
     REG_ADDS_ADDH        = 0x00,
     REG_ADDS_ADDL        = 0x01,
     REG_ADDS_SPED        = 0x02,
@@ -127,10 +130,10 @@ typedef enum LoRaRegAdds {
     REG_ADDS_OPTION      = 0x05,
     REG_ADDS_CRYPT       = 0x06,
     REG_ADDS_PID         = 0x80
-} LoRaRegAdds;
+};
 
 // Enum with the payloads of the module messages.
-typedef enum LoRaPacketLength {
+enum LoRaPacketLength {
     // Read the configuration registers (0x00 to 0x07).
     PL_CONFIGURATION     = 0x08,
     PL_SPED              = 0x01,
@@ -139,7 +142,7 @@ typedef enum LoRaPacketLength {
     PL_CHANNEL           = 0x01,
     PL_CRYPT             = 0x02,
     PL_PID               = 0x07
-} LoRaPacketLength;
+};
 
 #pragma pack(push, 1)
 typedef struct LoRaSpeed {
@@ -178,9 +181,11 @@ typedef struct LoRaConfiguration {
     LoRaSpeed speed;
     LoRaOptions options;
     
-    // For 868MHz LoRa E220 module, the base frequency for channel 0 is 850 MHz.
-    // Get the frequency by adding 850 + channel number (MHz).
     uint8_t channel;
+    uint16_t getFrequency_MHz() {
+        // For 868MHz LoRa E220 module, the base frequency for channel 0 is 850 MHz.
+        return this->channel + 850; 
+    }
 
     LoRaTransmissionMode transmissionMode;
 
@@ -193,16 +198,16 @@ typedef struct LoRaPID {
     uint8_t startAddress;
     uint8_t length;
 
-    uint8_t pid[PL_PID];
+    uint8_t pid[LoRaPacketLength::PL_PID];
 } LoRaPID;
 
 typedef struct LoRaModuleInformation {
-    uint8_t command;
-    uint8_t startAddress;
-    uint8_t length;
-    uint8_t model;
-    uint8_t version;
-    uint8_t features;
+    uint8_t command = 0;
+    uint8_t startAddress = 0;
+    uint8_t length = 0;
+    uint8_t model = 0;
+    uint8_t version = 0;
+    uint8_t features = 0;
 } LoRaModuleInformation;
 
 typedef struct LoRaMessage {
@@ -212,38 +217,42 @@ typedef struct LoRaMessage {
 } LoRaMessage;
 #pragma pack(pop)
 
-typedef struct LoRa {
+class LoRa {
+    public:
+    LoRa(UART* uart);
+    ~LoRa();
+
+    LoRaStatus getNextMessage(LoRaMessage* msg);
+    LoRaStatus sendMessage(LoRaMessage* msg);
+
+    LoRaStatus readConfigurationRegisters(LoRaConfiguration* config);
+
+    /**
+     * @brief Sets the configuration of the module.
+     * 
+     * @param config. Configuration fields to write.
+     * @param temporarySave. Set to 1 if the configuration is to be temporarily saved. Upon reset of
+     * the module, this configuration will be lost. Set to 0 to save it into non-volatile memory.
+     * @return LoRaStatus. SUCCESS if the configuration was well set on the device.
+     */
+    LoRaStatus writeConfigurationRegisters(LoRaConfiguration config, uint8_t temporarySave = 0);
+
+    LoRaStatus getModuleInformation(LoRaPID* pid);
+
+    LoRaStatus setMode(LoRaMode mode);
+    LoRaMode getMode();
+
+    private:
+    LoRaStatus receiveData(uint16_t dataLen, uint8_t* dataBuffer);
+    LoRaStatus writeData(uint8_t* dataBuffer, uint16_t dataLen);
+    LoRaStatus waitAUXPin(uint32_t timeout_ms);
+    uint8_t writeProgramCommand(
+        LoRaCommand cmd, LoRaRegAdds addrs, LoRaPacketLength packetLength);
+
     UART* uart;
-    LoRaMode currentMode;
+    LoRaMode currentMode = LoRaMode::MODE_INIT;
     LoRaConfiguration currentConfig;
-} LoRa;
 
-void initLoRa(LoRa* lora, UART* uart);
-
-LoRaStatus getNextMessage(LoRa* lora, LoRaMessage* msg);
-LoRaStatus sendMessage(LoRa* lora, LoRaMessage* msg);
-
-LoRaStatus readConfigurationRegisters(LoRa* lora);
-
-/**
- * @brief Sets the configuration of the module.
- * 
- * @param config. Configuration fields to write.
- * @param temporarySave. Set to 1 if the configuration is to be temporarily saved. Upon reset of
- * the module, this configuration will be lost. Set to 0 to save it into non-volatile memory.
- * @return LoRaStatus. SUCCESS if the configuration was well set on the device.
- */
-LoRaStatus writeConfigurationRegisters(LoRa* lora, LoRaConfiguration config, uint8_t temporarySave);
-
-LoRaStatus getModuleInformation(LoRa* lora, LoRaPID* pid);
-
-LoRaStatus setMode(LoRa* lora, LoRaMode mode);
-LoRaMode getMode(LoRa* lora);
-
-LoRaStatus receiveData(LoRa* lora, uint16_t dataLen, uint8_t* dataBuffer);
-LoRaStatus writeData(LoRa* lora, uint8_t* dataBuffer, uint16_t dataLen);
-LoRaStatus waitAUXPin(LoRa* lora, uint32_t timeout_ms);
-uint8_t writeProgramCommand(LoRa* lora, 
-    LoRaCommand cmd, LoRaRegAdds addrs, LoRaPacketLength packetLength);
+};
 
 #endif // LORA_h
