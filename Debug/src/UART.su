@@ -1,7 +1,0 @@
-../src/UART.c:14:6:initUART	24	static
-../src/UART.c:28:6:updateUART	16	static
-../src/UART.c:43:6:attachDMAToUART	16	static
-../src/UART.c:54:9:sendToUART	32	static
-../src/UART.c:65:6:HAL_UARTEx_RxEventCallback	24	static
-../src/UART.c:81:6:HAL_UART_TxCpltCallback	24	static
-../src/UART.c:101:6:HAL_UART_ErrorCallback	24	static
