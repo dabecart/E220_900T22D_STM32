@@ -1,0 +1,13 @@
+../src/LoRa.cpp:3:1:LoRa::LoRa(UART*)	1
+../src/LoRa.cpp:8:1:LoRa::~LoRa()	1
+../src/LoRa.cpp:10:12:LoRaStatus LoRa::getNextMessage(LoRaMessage*)	5
+../src/LoRa.cpp:31:12:LoRaStatus LoRa::sendMessage(LoRaMessage*)	2
+../src/LoRa.cpp:37:12:LoRaStatus LoRa::readConfigurationRegisters(LoRaConfiguration*)	9
+../src/LoRa.cpp:78:12:LoRaStatus LoRa::writeConfigurationRegisters(LoRaConfiguration, uint8_t)	12
+../src/LoRa.cpp:133:12:LoRaStatus LoRa::getModuleInformation(LoRaPID*)	6
+../src/LoRa.cpp:170:12:LoRaStatus LoRa::receiveData(uint16_t, uint8_t*)	3
+../src/LoRa.cpp:180:12:LoRaStatus LoRa::writeData(uint8_t*, uint16_t)	3
+../src/LoRa.cpp:190:12:LoRaStatus LoRa::waitAUXPin(uint32_t)	3
+../src/LoRa.cpp:203:9:uint8_t LoRa::writeProgramCommand(LoRaCommand, LoRaRegAdds, LoRaPacketLength)	1
+../src/LoRa.cpp:211:12:LoRaStatus LoRa::setMode(LoRaMode)	6
+../src/LoRa.cpp:246:10:LoRaMode LoRa::getMode()	1

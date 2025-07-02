@@ -1,0 +1,5 @@
+../src/CircularBuffer.cpp:14:1:CircularBuffer::CircularBuffer()	1
+../src/CircularBuffer.cpp:15:1:CircularBuffer::~CircularBuffer()	1
+../src/CircularBuffer.cpp:17:6:void CircularBuffer::empty()	1
+../src/CircularBuffer.cpp:117:9:uint8_t CircularBuffer::updateIndices(uint32_t)	3
+../src/CircularBuffer.cpp:141:6:void CircularBuffer::lockRoutine()	2
