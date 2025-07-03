@@ -11,6 +11,9 @@
 #define LORA_HEADER_LEN 3   // command, startAddress, length
 #define LORA_MAX_MSG_LEN 200
 
+/**
+ * @brief Return field for LoRa functions. 
+ */
 enum LoRaStatus {
   LORA_SUCCESS = 1,
   LORA_ERR_UNKNOWN,
@@ -30,8 +33,7 @@ enum LoRaUARTParity {
   MODE_11_8N1 = 0b11
 };
 
-enum LoRaUARTBaudrate
-{
+enum LoRaUARTBaudrate {
   UART_BPS_1200 = 0b000,
   UART_BPS_2400 = 0b001,
   UART_BPS_4800 = 0b010,
@@ -42,8 +44,7 @@ enum LoRaUARTBaudrate
   UART_BPS_115200 = 0b111
 };
 
-enum LoRaAirDataRate
-{
+enum LoRaAirDataRate {
   AIR_DATA_RATE_000_24 = 0b000,
   AIR_DATA_RATE_001_24 = 0b001,
   AIR_DATA_RATE_010_24 = 0b010,
@@ -145,12 +146,18 @@ enum LoRaPacketLength {
 };
 
 #pragma pack(push, 1)
+/**
+ * @brief Register 0x02 of the LoRa module. 
+ */
 typedef struct LoRaSpeed {
     LoRaAirDataRate   airDataRate     :3; 
     LoRaUARTParity    uartParity      :2; 
     LoRaUARTBaudrate  uartBaudRate    :3; 
 } LoRaSpeed;
 
+/**
+ * @brief Register 0x03 of the LoRa module. 
+ */
 typedef struct LoRaTransmissionMode {
     LoRaWORPeriod           WORPeriod           :3; 
     uint8_t                 reserved2           :1; 
@@ -160,6 +167,9 @@ typedef struct LoRaTransmissionMode {
     LoRaRSSIEnable          enableRSSI          :1;
 } LoRaTransmissionMode;
 
+/**
+ * @brief Register 0x05 of the LoRa module. 
+ */
 typedef struct LoRaOptions {
     LoRaTransmissionPower       transmissionPower   :2;
     uint8_t                     reserved            :3; 
@@ -167,9 +177,11 @@ typedef struct LoRaOptions {
     LoRaSubPacketSetting        subPacketSetting    :2; 
 } LoRaOptions;
 
-// In MODE_3_PROGRAM, the inner registers of the module can be read. This struct contains the 
-// response of the module to a read request from register 0x00 to 0x07. 
-// Header + register 0x00 to 0x07. 
+/**
+ * @brief In MODE_3_PROGRAM, the inner registers of the module can be read. This struct contains the 
+ * response of the module to a read request from register 0x00 to 0x07. 
+ * Header + register 0x00 to 0x07. 
+ */
 typedef struct LoRaConfiguration {
     LoRaCommand command;
     uint8_t startAddress;
@@ -193,6 +205,9 @@ typedef struct LoRaConfiguration {
     uint8_t cryptL;
 } LoRaConfiguration;
 
+/**
+ * @brief Reads registers 0x80 to 0x86.
+ */
 typedef struct LoRaPID {
     LoRaCommand command;
     uint8_t startAddress;
@@ -200,15 +215,6 @@ typedef struct LoRaPID {
 
     uint8_t pid[LoRaPacketLength::PL_PID];
 } LoRaPID;
-
-typedef struct LoRaModuleInformation {
-    uint8_t command = 0;
-    uint8_t startAddress = 0;
-    uint8_t length = 0;
-    uint8_t model = 0;
-    uint8_t version = 0;
-    uint8_t features = 0;
-} LoRaModuleInformation;
 
 typedef struct LoRaMessage {
     uint16_t len;
@@ -219,12 +225,47 @@ typedef struct LoRaMessage {
 
 class LoRa {
     public:
+    /**
+     * @brief Construct a new LoRa object
+     * 
+     * @param uart Pointer to the UART handler.
+     */
     LoRa(UART* uart);
+
+    /**
+     * @brief Destroy the LoRa object
+     */
     ~LoRa();
 
+    /**
+     * @brief Inits comunications with the LoRa module.
+     * 
+     * @return LoRaStatus
+     */
+    LoRaStatus init();
+
+    /**
+     * @brief Get the next message received.
+     * 
+     * @param msg. Pointer where the message is to be saved.
+     * @return LoRaStatus 
+     */
     LoRaStatus getNextMessage(LoRaMessage* msg);
+
+    /**
+     * @brief Send a message over LoRa.
+     * 
+     * @param msg. Pointer to the message to be sent.
+     * @return LoRaStatus 
+     */
     LoRaStatus sendMessage(LoRaMessage* msg);
 
+    /**
+     * @brief Read the configuration registers of the LoRa module.
+     * 
+     * @param config. Where the configuration fields will be stored.
+     * @return LoRaStatus 
+     */
     LoRaStatus readConfigurationRegisters(LoRaConfiguration* config);
 
     /**
@@ -237,22 +278,65 @@ class LoRa {
      */
     LoRaStatus writeConfigurationRegisters(LoRaConfiguration config, uint8_t temporarySave = 0);
 
+    /**
+     * @brief Get the LoRa module's information. 
+     * 
+     * @param pid. Where the information will be stored.
+     * @return LoRaStatus 
+     */
     LoRaStatus getModuleInformation(LoRaPID* pid);
 
+    /**
+     * @brief Set the mode of operation of the LoRa module.
+     * 
+     * @param mode. The mode to be set.
+     * @return LoRaStatus 
+     */
     LoRaStatus setMode(LoRaMode mode);
-    LoRaMode getMode();
 
     private:
+    /**
+     * @brief Receive data from the LoRa module.
+     * 
+     * @param dataLen. Number of bytes to read/receive.
+     * @param dataBuffer. Where the received data will be stored.
+     * @return LoRaStatus 
+     */
     LoRaStatus receiveData(uint16_t dataLen, uint8_t* dataBuffer);
+
+    /**
+     * @brief Send data to the LoRa module.
+     * 
+     * @param dataBuffer. Where the data is stored.
+     * @param dataLen. Number of bytes inside the data buffer.
+     * @return LoRaStatus 
+     */
     LoRaStatus writeData(uint8_t* dataBuffer, uint16_t dataLen);
+
+    /**
+     * @brief The AUX pin is set to 0 when the device is busy. This function waits for the LoRa 
+     * module to not be busy.
+     * 
+     * @param timeout_ms. Time to wait for the AUX pin to go back to 1.
+     * @return LoRaStatus 
+     */
     LoRaStatus waitAUXPin(uint32_t timeout_ms);
+
+    /**
+     * @brief Send a command to the LoRa module.
+     * 
+     * @param cmd. Command identifier.
+     * @param addrs. Register address.
+     * @param packetLength. Number of registers to operate.
+     * @return uint8_t 1 if the program was well written.
+     */
     uint8_t writeProgramCommand(
         LoRaCommand cmd, LoRaRegAdds addrs, LoRaPacketLength packetLength);
 
+    public:
     UART* uart;
     LoRaMode currentMode = LoRaMode::MODE_INIT;
     LoRaConfiguration currentConfig;
-
 };
 
 #endif // LORA_h

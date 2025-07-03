@@ -9,12 +9,25 @@
 
 class MainMCU {
     public:
+    /**
+     * @brief Construct a new MainMCU object.
+     * 
+     * @param huart1. Handler to UART1.
+     * @param hdma_usart1_rx. Handler to the DMA_UART1_RX.
+     * @param hdma_usart1_tx. Handler to the DMA_UART1_TX.
+     */
     MainMCU(UART_HandleTypeDef* huart1,
             DMA_HandleTypeDef* hdma_usart1_rx,
             DMA_HandleTypeDef* hdma_usart1_tx);
 
+    /**
+     * @brief Destroy the MainMCU object.
+     */
     ~MainMCU();
 
+    /**
+     * @brief Main routine of the MCU. 
+     */
     void mainLoop();
 
     UART uart;

@@ -1,11 +1,20 @@
 #include "LoRa.h"
 
-LoRa::LoRa(UART* uart) : uart(uart) {
-    readConfigurationRegisters(&currentConfig);
-    setMode(LoRaMode::MODE_0_NORMAL);
-}
+LoRa::LoRa(UART* uart) : uart(uart) {}
 
 LoRa::~LoRa() {}
+
+LoRaStatus LoRa::init() {
+    LoRaStatus configSt = readConfigurationRegisters(&currentConfig);
+    LoRaStatus modeSt = setMode(LoRaMode::MODE_0_NORMAL);
+    if(configSt != LoRaStatus::LORA_SUCCESS) {
+        return configSt;
+    }else if(modeSt != LoRaStatus::LORA_SUCCESS) {
+        return modeSt;
+    }else {
+        return LoRaStatus::LORA_SUCCESS;
+    }
+}
 
 LoRaStatus LoRa::getNextMessage(LoRaMessage* msg) {
     if(msg == NULL) return LoRaStatus::LORA_ERR_INVALID_PARAM;
@@ -168,12 +177,12 @@ LoRaStatus LoRa::getModuleInformation(LoRaPID* pid) {
 }
 
 LoRaStatus LoRa::receiveData(uint16_t dataLen, uint8_t* dataBuffer) {
-    // Read data from the UART.
-    HAL_StatusTypeDef status = HAL_UART_Receive(uart->hUART, dataBuffer, dataLen, 1000);
     // While the LoRa module is transmitting the AUX pin remains LOW.
     LoRaStatus auxStatus = waitAUXPin(1000);
-    if(status == HAL_TIMEOUT) return LoRaStatus::LORA_ERR_TIMEOUT;
-    else if(status == HAL_ERROR) return LoRaStatus::LORA_ERR_UNKNOWN;
+    HAL_Delay(1);
+    // Read data from the UART circular buffer.
+    uint8_t dataOk = uart->RXBuffer.popN(dataLen, dataBuffer);
+    if(!dataOk) return LoRaStatus::LORA_ERR_INVALID_RESPONSE;
     return auxStatus; 
 }
 
@@ -211,6 +220,9 @@ uint8_t LoRa::writeProgramCommand(
 LoRaStatus LoRa::setMode(LoRaMode mode) {
     HAL_Delay(40);
 
+    // Empty the buffer upon changing mode (this gets rid of previous messages).
+    uart->RXBuffer.empty();
+
     switch (mode) {
         case MODE_0_NORMAL:
             HAL_GPIO_WritePin(LORA_M0_GPIO_Port, LORA_M0_Pin, GPIO_PIN_RESET);
@@ -241,8 +253,4 @@ LoRaStatus LoRa::setMode(LoRaMode mode) {
     } 
     
     return st;
-}
-
-LoRaMode LoRa::getMode() {
-    return currentMode;
 }

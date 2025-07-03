@@ -17,39 +17,41 @@
 
 class UART {
     public:
-    /************************************** FUNCTION ***********************************************
-     * @brief Initializes an UART_st with the main.c variables.
+    /**
+     * @brief Construct a new UART object.
+     * 
      * @param hUART. The UART handler.
      * @param rxDMA. The DMA handler of the RX.
      * @param txDMA. The DMA hablder of the TX. 
-     * @return None
-    ***********************************************************************************************/
+     */
     UART(
         UART_HandleTypeDef*     hUART,
         DMA_HandleTypeDef*      rxDMA,
         DMA_HandleTypeDef*      txDMA
     );
 
+    /**
+     * @brief Destroy the UART object.
+     */
     ~UART();
 
-    /************************************** FUNCTION ***********************************************
-     * @brief Call this function in the main loop. Sends messages stored in the TX buffer.
-     * @return None
-    ***********************************************************************************************/
+    /**
+     * @brief Update the UART RX buffers.
+     */
     void update();
 
-    /************************************** FUNCTION ***********************************************
-     * @brief Sends a buffer through UART.
-     * @param pucMessage. The buffer containing the message.
-     * @param usMessageLength. The length of the message.
-     * @return 1 if it was correctly sent.
-    ***********************************************************************************************/
+    /**
+     * @brief Send a buffer to an UART.
+     * 
+     * @param pucMessage. Message to send.
+     * @param usMessageLength. The message's number of bytes.
+     * @return uint8_t 1 if sent correctly.
+     */
     uint8_t sendToUART(uint8_t* pucMessage, uint16_t usMessageLength);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Links a DMA to the circular buffers of the serial port.
-     * @return None
-    ***********************************************************************************************/
+     */
     void attachDMAToSerialPort();
 
     public:

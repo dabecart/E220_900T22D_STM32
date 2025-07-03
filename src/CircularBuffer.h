@@ -19,75 +19,87 @@
 
 class CircularBuffer {
     public:
+    /**
+     * @brief Construct a new Circular Buffer object
+     */
     CircularBuffer();
+
+    /**
+     * @brief Destroy the Circular Buffer object
+     */
     ~CircularBuffer();
 
-    /************************************** FUNCTION ***********************************************
-     * @brief Empties a CircularBuffer.
-     * @return None 
-    ***********************************************************************************************/
+    /**
+     * @brief Empties a CircularBuffer. 
+     */
     void empty();
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Pushes a single byte into a CircularBuffer. Advances the tail index.
+     * 
      * @param item. Byte to be store into the buffer.
-     * @return 1 if the push was successful. 
-    ***********************************************************************************************/
+     * @return uint8_t 1 if the push was successful. 
+     */
     uint8_t push(uint8_t item);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Pushes N bytes into a CircularBuffer. Advances the tail index.
-     * @param items. Bytes to be stored into the buffer.
-     * @param count. Number of bytes to push.
-     * @return 1 if the push was successful. 
-    ***********************************************************************************************/
+     * 
+     * @param items. Bytes to be stored into the buffer. 
+     * @param count. Number of bytes to push.  
+     * @return uint8_t 1 if the push was successful. 
+     */
     uint8_t pushN(uint8_t* items, uint32_t count);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Reads a byte from a CircularBuffer. Advances the head index.
-     * @param item. Where the popped byte will be stored.
-     * @return 1 if the read item is valid. 
-    ***********************************************************************************************/
+     * 
+     * @param item. Where the popped byte will be stored. 
+     * @return uint8_t 1 if the read item is valid. 
+     */
     uint8_t pop(uint8_t* item);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Reads N bytes from a CircularBuffer. Advances the head index.
-     * @param count. How many bytes want to be popped.
+     * 
+     * @param count. How many bytes want to be popped. 
      * @param items. Where the popped bytes will be stored. If it's NULL the indices will still be 
-     * updated but no result will be returned.
-     * @return 1 if the read items are valid. 
-    ***********************************************************************************************/
+     * updated but no result will be returned. 
+     * @return uint8_t 1 if the read items are valid. 
+     */
     uint8_t popN(uint32_t count, uint8_t* items);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Reads a byte from a CircularBuffer. Does not advance the head index.
-     * @param item. Where the read byte will be stored.
-     * @return 1 if the read item is valid. 
-    ***********************************************************************************************/
+     * 
+     * @param item. Where the read byte will be stored. 
+     * @return uint8_t 1 if the read item is valid. 
+     */
     uint8_t peek(uint8_t* item);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief Reads N bytes from a CircularBuffer. Does not advance the head index.
-     * @param count. How many bytes want to be peeked.
-     * @param items. Where the peeked bytes will be stored.
-     * @return 1 if the read items are valid. 
-    ***********************************************************************************************/
+     * 
+     * @param count. How many bytes want to be peeked. 
+     * @param items. Where the peeked bytes will be stored. 
+     * @return uint8_t 1 if the read items are valid. 
+     */
     uint8_t peekN(uint32_t count, uint8_t* items);
 
-    /************************************** FUNCTION ***********************************************
+    /**
      * @brief The DMA functions automatically treats a buffer as a circular buffer. The callbacks 
      * return the new head of the buffer, so this function is used to update the head index 
      * accordingly.
-     * @param newHeadIndex. The head index returned by the callback.
-     * @return 1 if the update was OK. 
-    ***********************************************************************************************/
+     * 
+     * @param newHeadIndex. The head index returned by the callback. 
+     * @return uint8_t 1 if the update was OK. 
+     */
     uint8_t updateIndices(uint32_t newHeadIndex);
     
     private:
-    /************************************** FUNCTION ***********************************************
-     * \brief Returns only when the buffer isn't locked.
-     * \return None
-    ***********************************************************************************************/
+    /**
+     * @brief Returns only when the buffer isn't locked.
+     */
     void lockRoutine();
 
     public:
