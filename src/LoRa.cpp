@@ -6,6 +6,11 @@ LoRa::~LoRa() {}
 
 LoRaStatus LoRa::init() {
     LoRaStatus configSt = readConfigurationRegisters(&currentConfig);
+    if(configSt == LoRaStatus::LORA_SUCCESS) {
+        currentConfig.transmissionMode.enableRSSI = LoRaRSSIEnable::RSSI_ENABLED;
+        configSt = writeConfigurationRegisters(currentConfig, 0);
+    }
+
     LoRaStatus modeSt = setMode(LoRaMode::MODE_0_NORMAL);
     if(configSt != LoRaStatus::LORA_SUCCESS) {
         return configSt;
@@ -22,17 +27,20 @@ LoRaStatus LoRa::getNextMessage(LoRaMessage* msg) {
     msg->len = uart->RXBuffer.len;
     if(msg->len == 0) return LoRaStatus::LORA_ERR_NO_NEW_MSG;
 
-    if(msg->len > sizeof(msg->data)) msg->len = sizeof(msg->data);
+    if(msg->len > (sizeof(msg->data) - 1)) msg->len = sizeof(msg->data) - 1;
     
     uart->RXBuffer.popN((uint32_t) msg->len, msg->data);
     
     if(currentConfig.transmissionMode.enableRSSI) {
-        // RSSI is calculated as -(255 - field)
-        msg->rssi = ((int16_t) msg->data[msg->len - 1]) - 255;
-        msg->len--;    
+        // RSSI is calculated as -(256 - field)
+        msg->rssi = ((int16_t) msg->data[msg->len - 1]) - 256;
+        msg->len--;
     }else {
         msg->rssi = 0;
     }
+
+    // Add \0 at the end of the message.
+    msg->data[msg->len + 1] = 0;
     
     return LoRaStatus::LORA_SUCCESS;
 }
@@ -103,6 +111,10 @@ LoRaStatus LoRa::writeConfigurationRegisters(LoRaConfiguration config, uint8_t t
         return LoRaStatus::LORA_ERR_HARDWARE;        
     }
 
+    // The device should return header + payload (11 bytes).
+    // With temporarySave = 0, the device is returning 22 bytes... The first 11 bytes are empty.
+    uart->RXBuffer.popN(11, NULL);
+
     // The module should respond with the same payload as the configuration register.
     LoRaConfiguration readConfig;
     LoRaStatus receiveStatus = receiveData(sizeof(readConfig), (uint8_t*) &readConfig);
@@ -119,8 +131,8 @@ LoRaStatus LoRa::writeConfigurationRegisters(LoRaConfiguration config, uint8_t t
 
     // Check that received payload is the same as the sent payload. 
     // Only check from addressH to transmission mode.
-    uint8_t* wConf = (uint8_t*) &config;
-    uint8_t* rConf = (uint8_t*) &readConfig;
+    uint8_t* wConf = ((uint8_t*) &config) + LORA_HEADER_LEN;
+    uint8_t* rConf = ((uint8_t*) &readConfig) + LORA_HEADER_LEN;
     LoRaStatus checkStatus = LoRaStatus::LORA_SUCCESS;
     if(
         (wConf[LoRaRegAdds::REG_ADDS_ADDH]       != rConf[LoRaRegAdds::REG_ADDS_ADDH])       ||
@@ -220,9 +232,6 @@ uint8_t LoRa::writeProgramCommand(
 LoRaStatus LoRa::setMode(LoRaMode mode) {
     HAL_Delay(40);
 
-    // Empty the buffer upon changing mode (this gets rid of previous messages).
-    uart->RXBuffer.empty();
-
     switch (mode) {
         case MODE_0_NORMAL:
             HAL_GPIO_WritePin(LORA_M0_GPIO_Port, LORA_M0_Pin, GPIO_PIN_RESET);
@@ -252,5 +261,8 @@ LoRaStatus LoRa::setMode(LoRaMode mode) {
         currentMode = mode;
     } 
     
+    // Empty the buffer upon changing mode (this gets rid of previous messages).
+    uart->RXBuffer.empty();
+
     return st;
 }
