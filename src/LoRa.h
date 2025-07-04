@@ -216,14 +216,11 @@ typedef struct LoRaPID {
     uint8_t pid[LoRaPacketLength::PL_PID];
 } LoRaPID;
 
-typedef struct LoRaMessage {
-    uint16_t len;
-    int16_t rssi;
-    uint8_t data[LORA_MAX_MSG_LEN];
-} LoRaMessage;
 #pragma pack(pop)
 
 class LoRa {
+    friend class Comms;
+
     public:
     /**
      * @brief Construct a new LoRa object
@@ -243,22 +240,6 @@ class LoRa {
      * @return LoRaStatus
      */
     LoRaStatus init();
-
-    /**
-     * @brief Get the next message received.
-     * 
-     * @param msg. Pointer where the message is to be saved.
-     * @return LoRaStatus 
-     */
-    LoRaStatus getNextMessage(LoRaMessage* msg);
-
-    /**
-     * @brief Send a message over LoRa.
-     * 
-     * @param msg. Pointer to the message to be sent.
-     * @return LoRaStatus 
-     */
-    LoRaStatus sendMessage(LoRaMessage* msg);
 
     /**
      * @brief Read the configuration registers of the LoRa module.
@@ -333,7 +314,7 @@ class LoRa {
     uint8_t writeProgramCommand(
         LoRaCommand cmd, LoRaRegAdds addrs, LoRaPacketLength packetLength);
 
-    public:
+    private:
     UART* uart;
     LoRaMode currentMode = LoRaMode::MODE_INIT;
     LoRaConfiguration currentConfig;

@@ -2,11 +2,12 @@
 #define MAIN_MCU_h
 
 #include "stm32g4xx_hal.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
+#include <stdio.h>
+// #include "usb_device.h"
+// #include "usbd_cdc_if.h"
 #include "UART.h"
-#include "LoRa.h"
 #include "GUI.h"
+#include "Comms.h"
 
 class MainMCU {
     public:
@@ -34,7 +35,7 @@ class MainMCU {
     void mainLoop();
 
     UART uart;
-    LoRa lora;
+    Comms comms;
     GUI gui;
 };
 

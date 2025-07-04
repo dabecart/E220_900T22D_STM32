@@ -21,36 +21,6 @@ LoRaStatus LoRa::init() {
     }
 }
 
-LoRaStatus LoRa::getNextMessage(LoRaMessage* msg) {
-    if(msg == NULL) return LoRaStatus::LORA_ERR_INVALID_PARAM;
-
-    msg->len = uart->RXBuffer.len;
-    if(msg->len == 0) return LoRaStatus::LORA_ERR_NO_NEW_MSG;
-
-    if(msg->len > (sizeof(msg->data) - 1)) msg->len = sizeof(msg->data) - 1;
-    
-    uart->RXBuffer.popN((uint32_t) msg->len, msg->data);
-    
-    if(currentConfig.transmissionMode.enableRSSI) {
-        // RSSI is calculated as -(256 - field)
-        msg->rssi = ((int16_t) msg->data[msg->len - 1]) - 256;
-        msg->len--;
-    }else {
-        msg->rssi = 0;
-    }
-
-    // Add \0 at the end of the message.
-    msg->data[msg->len + 1] = 0;
-    
-    return LoRaStatus::LORA_SUCCESS;
-}
-
-LoRaStatus LoRa::sendMessage(LoRaMessage* msg) {
-    if(msg == NULL) return LoRaStatus::LORA_ERR_INVALID_PARAM;
-
-    return writeData(msg->data, msg->len);
-}
-
 LoRaStatus LoRa::readConfigurationRegisters(LoRaConfiguration* config) {
     if(config == NULL) return LoRaStatus::LORA_ERR_INVALID_PARAM;
 

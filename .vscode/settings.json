@@ -13,7 +13,9 @@
         "utility": "cpp",
         "string": "cpp",
         "lv_init.h": "c",
-        "lv_conf.h": "c"
+        "lv_conf.h": "c",
+        "thread": "cpp",
+        "regex": "cpp"
     },
     "cSpell.words": [
         "OCXO"

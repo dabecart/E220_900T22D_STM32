@@ -59,7 +59,8 @@ uint8_t CircularBuffer::pop(uint8_t* item) {
 
     lockRoutine();
 
-    *item = data[tail];
+    if(item != NULL) *item = data[tail];
+    
     tail++;
     if(tail >= size) tail = 0;
     len--;
@@ -89,7 +90,7 @@ uint8_t CircularBuffer::popN(uint32_t count, uint8_t* items) {
 }
 
 uint8_t CircularBuffer::peek(uint8_t* item) {
-    if(len < 1) return 0;
+    if((len < 1) || (item == NULL)) return 0;
     
     *item = data[tail];
     return 1;
