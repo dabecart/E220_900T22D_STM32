@@ -8,6 +8,7 @@
 #include "UART.h"
 #include "GUI.h"
 #include "Comms.h"
+#include "NMEA.h"
 
 class MainMCU {
     public:
@@ -17,11 +18,17 @@ class MainMCU {
      * @param huart1. Handler to UART1.
      * @param hdma_usart1_rx. Handler to the DMA_UART1_RX.
      * @param hdma_usart1_tx. Handler to the DMA_UART1_TX.
+     * @param huart2. Handler to UART2.
+     * @param hdma_usart2_rx. Handler to the DMA_UART2_RX.
+     * @param hdma_usart2_tx. Handler to the DMA_UART2_TX.
      * @param hspi1. Handler to the TFT SPI.
      */
     MainMCU(UART_HandleTypeDef* huart1,
             DMA_HandleTypeDef*  hdma_usart1_rx,
             DMA_HandleTypeDef*  hdma_usart1_tx,
+            UART_HandleTypeDef* huart2,
+            DMA_HandleTypeDef*  hdma_usart2_rx,
+            DMA_HandleTypeDef*  hdma_usart2_tx,
             SPI_HandleTypeDef*  hspi1);
 
     /**
@@ -34,8 +41,10 @@ class MainMCU {
      */
     void mainLoop();
 
-    UART uart;
+    UART uartLoRa;
+    UART uartNMEA;
     Comms comms;
+    NMEA nmea;
     GUI gui;
 };
 

@@ -63,8 +63,10 @@ uint8_t UART::sendToUART(uint8_t* pucMessage, uint16_t usMessageLength) {
 ***************************************************************************************************/
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *hUART, uint16_t newHeadIndex) {   
     UART* referencedUART = NULL;
-    if(hUART == mcu->uart.hUART) {
-        referencedUART = &mcu->uart;
+    if(hUART == mcu->uartLoRa.hUART) {
+        referencedUART = &mcu->uartLoRa;
+    }else if(hUART == mcu->uartNMEA.hUART) {
+        referencedUART = &mcu->uartNMEA;
     } // Add more UART handlers if used.
 
     if(referencedUART != NULL) {
@@ -79,8 +81,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *hUART, uint16_t newHeadIndex
 ***************************************************************************************************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUART) {
     UART* referencedUART = NULL;
-    if(hUART == mcu->uart.hUART) {
-        referencedUART = &mcu->uart;
+    if(hUART == mcu->uartLoRa.hUART) {
+        referencedUART = &mcu->uartLoRa;
+    }else if(hUART == mcu->uartNMEA.hUART) {
+        referencedUART = &mcu->uartNMEA;
     } // Add more UART handlers if used.
 
     if(referencedUART != NULL) {
@@ -99,8 +103,10 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *hUART) {
 ***************************************************************************************************/
 void HAL_UART_ErrorCallback(UART_HandleTypeDef* hUART) {
     UART* referencedUART = NULL;
-    if(hUART == mcu->uart.hUART) {
-        referencedUART = &mcu->uart;
+    if(hUART == mcu->uartLoRa.hUART) {
+        referencedUART = &mcu->uartLoRa;
+    }else if(hUART == mcu->uartNMEA.hUART) {
+        referencedUART = &mcu->uartNMEA;
     } // Add more UART handlers if used.
 
     if(referencedUART != NULL) {
