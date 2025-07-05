@@ -5,6 +5,8 @@ LoRa::LoRa(UART* uart) : uart(uart) {}
 LoRa::~LoRa() {}
 
 LoRaStatus LoRa::init() {
+    setMode(LoRaMode::MODE_3_CONFIGURATION);
+
     LoRaStatus configSt = readConfigurationRegisters(&currentConfig);
     if(configSt == LoRaStatus::LORA_SUCCESS) {
         currentConfig.transmissionMode.enableRSSI = LoRaRSSIEnable::RSSI_ENABLED;
@@ -27,7 +29,7 @@ LoRaStatus LoRa::readConfigurationRegisters(LoRaConfiguration* config) {
     LoRaMode previousMode = currentMode;
 
     // Switch to Program mode.
-    LoRaStatus st = setMode(LoRaMode::MODE_3_PROGRAM);
+    LoRaStatus st = setMode(LoRaMode::MODE_3_CONFIGURATION);
     if(st != LoRaStatus::LORA_SUCCESS) return st;
 
     // Write the command to read the configuration register (CFG).
@@ -66,7 +68,7 @@ LoRaStatus LoRa::writeConfigurationRegisters(LoRaConfiguration config, uint8_t t
     LoRaMode previousMode = currentMode;
 
     // Switch to Program mode.
-    LoRaStatus st = setMode(LoRaMode::MODE_3_PROGRAM);
+    LoRaStatus st = setMode(LoRaMode::MODE_3_CONFIGURATION);
     if(st != LoRaStatus::LORA_SUCCESS) return st;
 
     // Write the configuration registers (CFG).
@@ -127,7 +129,7 @@ LoRaStatus LoRa::getModuleInformation(LoRaPID* pid) {
     LoRaMode previousMode = currentMode;
 
     // Switch to Program mode.
-    LoRaStatus st = setMode(LoRaMode::MODE_3_PROGRAM);
+    LoRaStatus st = setMode(LoRaMode::MODE_3_CONFIGURATION);
     if(st != LoRaStatus::LORA_SUCCESS) return st;
 
     // Write the command to read the configuration register (CFG).
@@ -200,6 +202,8 @@ uint8_t LoRa::writeProgramCommand(
 }
 
 LoRaStatus LoRa::setMode(LoRaMode mode) {
+    if(currentMode == mode) return LoRaStatus::LORA_SUCCESS;
+    
     HAL_Delay(40);
 
     switch (mode) {

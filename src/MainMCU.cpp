@@ -29,24 +29,24 @@ MainMCU::MainMCU(UART_HandleTypeDef* huart1,
 MainMCU::~MainMCU() {}
 
 void MainMCU::mainLoop() {
-    //  static uint32_t lastMsgOutTick = HAL_GetTick();
-    //  static uint16_t lastPayload = 0;
-
-    //  uint32_t currentTick = HAL_GetTick();
-    //  if((currentTick - lastMsgOutTick) > 1000) {
-    //      uint16_t len = snprintf(serialMsg, sizeof(serialMsg), ">%d<", lastPayload);
-        
-    //      if(comms.sendMessage(COMMS_MULTICAST_ID, (uint8_t*) serialMsg, len)) {
-    //          // int len = snprintf(serialMsg, sizeof(serialMsg), "Sent >%d<\n", lastPayload);
-    //          // CDC_Transmit_FS((uint8_t*) serialMsg, len);
-    //          HAL_GPIO_WritePin(TEST_LED_GPIO_Port, TEST_LED_Pin, GPIO_PIN_SET);
-    //          HAL_Delay(50);
-    //          HAL_GPIO_WritePin(TEST_LED_GPIO_Port, TEST_LED_Pin, GPIO_PIN_RESET);
-    //      }
-        
-    //      lastPayload++;
-    //      lastMsgOutTick = currentTick;
-    //  }
+//     static uint32_t lastMsgOutTick = HAL_GetTick();
+//     static uint16_t lastPayload = 0;
+//
+//     uint32_t currentTick = HAL_GetTick();
+//     if((currentTick - lastMsgOutTick) > 1000) {
+//         uint16_t len = snprintf(serialMsg, sizeof(serialMsg), ">%d<", lastPayload);
+//
+//         if(comms.sendMessage(COMMS_MULTICAST_ID, (uint8_t*) serialMsg, len)) {
+//             // int len = snprintf(serialMsg, sizeof(serialMsg), "Sent >%d<\n", lastPayload);
+//             // CDC_Transmit_FS((uint8_t*) serialMsg, len);
+//             HAL_GPIO_WritePin(TEST_LED_GPIO_Port, TEST_LED_Pin, GPIO_PIN_SET);
+//             HAL_Delay(50);
+//             HAL_GPIO_WritePin(TEST_LED_GPIO_Port, TEST_LED_Pin, GPIO_PIN_RESET);
+//         }
+//
+//         lastPayload++;
+//         lastMsgOutTick = currentTick;
+//     }
 
     CommsMsg msg;
     if(comms.getNextMessage(&msg)) {
@@ -75,7 +75,8 @@ void MainMCU::mainLoop() {
         gui.tft.fillRectangle(0, 10*9, gui.tft.width, 10, BLACK);
         gui.tft.writeString(0, 10*9,  serialMsg, Font_7x10, WHITE, BLACK);
 
-        snprintf(serialMsg, sizeof(serialMsg), "Channel %d", comms.getLoRaConfiguration().channel);
+        snprintf(serialMsg, sizeof(serialMsg), 
+                 "Channel %d - Fix %d", comms.getLoRaConfiguration().channel, nmea.fix_quality);
         gui.tft.writeString(0, gui.tft.height - 11,  serialMsg, Font_7x10, BLACK, BLUE);
 
         HAL_GPIO_WritePin(TEST_LED_GPIO_Port, TEST_LED_Pin, GPIO_PIN_SET);

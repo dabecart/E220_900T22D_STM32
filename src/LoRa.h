@@ -102,14 +102,9 @@ enum LoRaTransmissionPower { // in dBm
 
 enum LoRaMode {
     MODE_0_NORMAL           = 0,
-    MODE_0_TRANSMISSION     = 0,
     MODE_1_WOR_TRANSMITTER  = 1,
-    MODE_1_WOR              = 1,
     MODE_2_WOR_RECEIVER     = 2,
-    MODE_2_POWER_SAVING     = 2,
     MODE_3_CONFIGURATION    = 3,
-    MODE_3_PROGRAM          = 3,
-    MODE_3_SLEEP            = 3,
     MODE_INIT               = 0xFF
 };
 

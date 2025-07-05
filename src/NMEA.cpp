@@ -49,7 +49,7 @@ double NMEA::NMEAtoDecimal(const char *nmea_coord, char direction) {
 
 void NMEA::parseNMEALine(char *line) {
     if(strstr(line, "$GNGGA") == NULL) return;
-    
+
     char *token;
     int field = 0;
     char lat_buf[16] = {0}, lat_dir = 0;
@@ -64,13 +64,13 @@ void NMEA::parseNMEALine(char *line) {
             case 2: // Latitude
                 strncpy(lat_buf, token, sizeof(lat_buf));
                 break;
-            case 3:
+            case 3: // N/S
                 lat_dir = token[0];
                 break;
             case 4: // Longitude
                 strncpy(lon_buf, token, sizeof(lon_buf));
                 break;
-            case 5:
+            case 5: // E/W
                 lon_dir = token[0];
                 break;
             case 6: // Fix status

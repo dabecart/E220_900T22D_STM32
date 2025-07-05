@@ -15,7 +15,9 @@
         "lv_init.h": "c",
         "lv_conf.h": "c",
         "thread": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "fatfs_sd.h": "c",
+        "diskio.h": "c"
     },
     "cSpell.words": [
         "OCXO"

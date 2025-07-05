@@ -1,9 +1,8 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file           : main.h
-  * @brief          : Header for main.c file.
-  *                   This file contains the common defines of the application.
+  * @file   app_fatfs.h
+  * @brief  Header for fatfs applications
   ******************************************************************************
   * @attention
   *
@@ -19,19 +18,17 @@
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef __APP_FATFS_H
+#define __APP_FATFS_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32g4xx_hal.h"
+#include "ff.h"
+#include "ff_gen_drv.h"
+#include "user_diskio.h" /* defines USER_Driver as external */
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-void SystemClock_Config(void);
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -46,40 +43,29 @@ void SystemClock_Config(void);
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
-void Error_Handler(void);
-
+int32_t MX_FATFS_Init(void);
+int32_t MX_FATFS_Process(void);
 /* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
-
-/* Private defines -----------------------------------------------------------*/
-#define TFT_CS_Pin GPIO_PIN_6
-#define TFT_CS_GPIO_Port GPIOA
-#define TFT_A0_Pin GPIO_PIN_4
-#define TFT_A0_GPIO_Port GPIOC
-#define TFT_RESET_Pin GPIO_PIN_0
-#define TFT_RESET_GPIO_Port GPIOB
-#define SD_CD_Pin GPIO_PIN_12
-#define SD_CD_GPIO_Port GPIOB
-#define TEST_LED_Pin GPIO_PIN_6
-#define TEST_LED_GPIO_Port GPIOC
-#define LORA_AUX_Pin GPIO_PIN_8
-#define LORA_AUX_GPIO_Port GPIOA
-#define LORA_M1_Pin GPIO_PIN_11
-#define LORA_M1_GPIO_Port GPIOA
-#define LORA_M0_Pin GPIO_PIN_12
-#define LORA_M0_GPIO_Port GPIOA
-
-/* USER CODE BEGIN Private defines */
-
-/* USER CODE END Private defines */
-
 #ifdef __cplusplus
 }
 #endif
+/* USER CODE END EFP */
 
-#endif /* __MAIN_H */
+/* Private defines -----------------------------------------------------------*/
+/* USER CODE BEGIN Private defines */
+#define APP_OK                      0
+#define APP_ERROR                  -1
+#define APP_SD_UNPLUGGED           -2
+/* USER CODE END Private defines */
+
+extern FATFS USERFatFs;    /* File system object for USER logical drive */
+extern FIL USERFile;       /* File  object for USER */
+extern char USERPath[4];   /* USER logical drive path */
+
+#endif /*__APP_FATFS_H */
