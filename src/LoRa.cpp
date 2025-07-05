@@ -84,9 +84,6 @@ LoRaStatus LoRa::writeConfigurationRegisters(LoRaConfiguration config, uint8_t t
     }
 
     // The device should return header + payload (11 bytes).
-    // With temporarySave = 0, the device is returning 22 bytes... The first 11 bytes are empty.
-    uart->RXBuffer.popN(11, NULL);
-
     // The module should respond with the same payload as the configuration register.
     LoRaConfiguration readConfig;
     LoRaStatus receiveStatus = receiveData(sizeof(readConfig), (uint8_t*) &readConfig);

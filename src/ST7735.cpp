@@ -235,6 +235,7 @@ void ST7735::reset() {
     HAL_GPIO_WritePin(TFT_RESET_GPIO_Port, TFT_RESET_Pin, GPIO_PIN_RESET);
     HAL_Delay(5);
     HAL_GPIO_WritePin(TFT_RESET_GPIO_Port, TFT_RESET_Pin, GPIO_PIN_SET);
+    HAL_Delay(5);
 }
 
 void ST7735::writeCommand(uint8_t cmd) {
