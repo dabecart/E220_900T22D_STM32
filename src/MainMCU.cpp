@@ -77,7 +77,7 @@ void MainMCU::mainLoop() {
 
         snprintf(serialMsg, sizeof(serialMsg), 
                  "Channel %d - Fix %d", comms.getLoRaConfiguration().channel, nmea.fix_quality);
-        gui.tft.writeString(0, gui.tft.height - 11,  serialMsg, Font_7x10, BLACK, BLUE);
+        gui.tft.writeString(0, gui.tft.height - 11,  serialMsg, Font_7x10, WHITE, BLACK);
 
         HAL_GPIO_WritePin(TEST_LED_GPIO_Port, TEST_LED_Pin, GPIO_PIN_SET);
         HAL_Delay(50);

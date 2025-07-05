@@ -63,8 +63,8 @@ void Error_Handler(void);
 #define TFT_A0_GPIO_Port GPIOC
 #define TFT_RESET_Pin GPIO_PIN_0
 #define TFT_RESET_GPIO_Port GPIOB
-#define SD_CD_Pin GPIO_PIN_12
-#define SD_CD_GPIO_Port GPIOB
+#define SD_CS_Pin GPIO_PIN_12
+#define SD_CS_GPIO_Port GPIOB
 #define TEST_LED_Pin GPIO_PIN_6
 #define TEST_LED_GPIO_Port GPIOC
 #define LORA_AUX_Pin GPIO_PIN_8

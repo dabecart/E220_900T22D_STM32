@@ -400,27 +400,27 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, TFT_A0_Pin|TEST_LED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, TFT_RESET_Pin|SD_CD_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, TFT_RESET_Pin|SD_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : TFT_CS_Pin LORA_M1_Pin LORA_M0_Pin */
   GPIO_InitStruct.Pin = TFT_CS_Pin|LORA_M1_Pin|LORA_M0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TFT_A0_Pin TEST_LED_Pin */
   GPIO_InitStruct.Pin = TFT_A0_Pin|TEST_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : TFT_RESET_Pin SD_CD_Pin */
-  GPIO_InitStruct.Pin = TFT_RESET_Pin|SD_CD_Pin;
+  /*Configure GPIO pins : TFT_RESET_Pin SD_CS_Pin */
+  GPIO_InitStruct.Pin = TFT_RESET_Pin|SD_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LORA_AUX_Pin */
