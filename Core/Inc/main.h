@@ -75,7 +75,6 @@ void Error_Handler(void);
 #define LORA_M0_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
-
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

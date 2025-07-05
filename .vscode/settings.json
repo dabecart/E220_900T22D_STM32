@@ -17,7 +17,8 @@
         "thread": "cpp",
         "regex": "cpp",
         "fatfs_sd.h": "c",
-        "diskio.h": "c"
+        "diskio.h": "c",
+        "sd.h": "c"
     },
     "cSpell.words": [
         "OCXO"

@@ -6,7 +6,7 @@
 
 #define SPI_TIMEOUT 100
 
-//************************************** MMC/SDC Commands ******************************************
+///************************************* MMC/SDC Commands ******************************************
 #define CMD0     (0x40+0)     	// GO_IDLE_STATE
 #define CMD1     (0x40+1)     	// SEND_OP_COND
 #define CMD8     (0x40+8)     	// SEND_IF_COND
@@ -23,7 +23,7 @@
 #define CMD55    (0x40+55)    	// APP_CMD
 #define CMD58    (0x40+58)    	// READ_OCR
 
-//****************************** MMC Card Types (MMC_GET_TYPE) *************************************
+///***************************** MMC Card Types (MMC_GET_TYPE) *************************************
 
 #define CT_MMC		0x01	// MMC ver 3
 #define CT_SD1		0x02	// SD ver 1
@@ -80,6 +80,12 @@ class SD {
     uint8_t SD_SendCmd(uint8_t cmd, uint32_t arg);
 
     SPI_HandleTypeDef* 	HSPI_SDCARD;
+    DSTATUS Stat = STA_NOINIT;  // Disk Status
+    uint8_t CardType; 		    // Type 0:MMC, 1:SDC, 2:Block addressing
+    uint8_t PowerFlag = 0;	    // Power flag
+    
+    public:
+    uint16_t Timer1, Timer2; 	// 1ms Timer Counters
 };
 
 #endif // FATFS_SD_h

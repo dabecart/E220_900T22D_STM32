@@ -46,7 +46,8 @@ uint8_t Comms::getNextMessage(CommsMsg* msg) {
     }
 
     // Full message in memory!
-    msg->payload = (uint8_t*) malloc(msg->header.length - COMMS_HEADER_LEN - COMMS_CRC_LEN);
+    uint16_t payloadLength = msg->header.getPayloadLength();
+    msg->payload = (uint8_t*) malloc(payloadLength);
     if(msg->payload == NULL) {
         // Could not allocate the payload in memory.
         lora.uart->RXBuffer.pop(NULL);
@@ -54,15 +55,16 @@ uint8_t Comms::getNextMessage(CommsMsg* msg) {
     }
 
     lora.uart->RXBuffer.popN(COMMS_HEADER_LEN, (uint8_t*) &msg->header);
-    lora.uart->RXBuffer.popN(msg->header.length - COMMS_HEADER_LEN - COMMS_CRC_LEN, msg->payload);
+    lora.uart->RXBuffer.popN(payloadLength, msg->payload);
     lora.uart->RXBuffer.popN(COMMS_CRC_LEN, (uint8_t*) &msg->crc);
 
     // Full message stored in msg.
     uint16_t crc = calculateCRC((uint8_t*) &msg->header, COMMS_HEADER_LEN);
     crc = calculateCRCFromStartingValue(
-        msg->payload, msg->header.length - COMMS_HEADER_LEN - COMMS_CRC_LEN, crc);
+        msg->payload, payloadLength, crc);
     if(crc != msg->crc) {
         // CRC is not valid.
+        crcErrorCount++;
         lora.uart->RXBuffer.pop(NULL);
         return 0;
     }

@@ -6,7 +6,7 @@ NMEA::NMEA(UART* uart) {
 
 NMEA::~NMEA() {}
 
-void NMEA::update() {
+uint8_t NMEA::update() {
     uint8_t lineBuffer[256];
     uint16_t bufferIndex = 0;
 
@@ -19,19 +19,19 @@ void NMEA::update() {
         if(bufferIndex >= sizeof(lineBuffer)) {
             // Message is too long!
             uart->RXBuffer.pop(NULL);
-            return;
+            return 0;
         }
         bufferIndex++;
     }
 
     if(lineBuffer[bufferIndex] != '\n') {
         // Message is incomplete.
-        return;
+        return 0;
     } 
 
     // Found a message!
     lineBuffer[bufferIndex + 1] = 0; // Put a NULL at the end of the string.
-    parseNMEALine((char*) lineBuffer);
+    return parseNMEALine((char*) lineBuffer);
 }
 
 double NMEA::NMEAtoDecimal(const char *nmea_coord, char direction) {
@@ -47,8 +47,8 @@ double NMEA::NMEAtoDecimal(const char *nmea_coord, char direction) {
     return decimal;
 }
 
-void NMEA::parseNMEALine(char *line) {
-    if(strstr(line, "$GNGGA") == NULL) return;
+uint8_t NMEA::parseNMEALine(char *line) {
+    if(strstr(line, "$GNGGA") == NULL) return 0;
 
     char *token;
     int field = 0;
@@ -74,16 +74,23 @@ void NMEA::parseNMEALine(char *line) {
                 lon_dir = token[0];
                 break;
             case 6: // Fix status
-                fix_quality = atoi(token);
+                fixQuality = atoi(token);
+                break;
+            case 7: // Satellites used
+                satellitesUsed = atoi(token);
+                break;
+            case 9: // Altitude
+                altitude = atof(token);
                 break;
         }
         token = strtok(NULL, ",");
         field++;
     }
 
-    // fix_quality == 0 means is not positioned.
-    if(fix_quality != 0) {
+    // fixQuality == 0 means is not positioned.
+    if(fixQuality != 0) {
         latitude = NMEAtoDecimal(lat_buf, lat_dir);
         longitude = NMEAtoDecimal(lon_buf, lon_dir);
     }
+    return 1;
 }

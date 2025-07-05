@@ -2,10 +2,11 @@
 #include "diskio.h"
 #include "FATFS_SD.h"
 
-static volatile DSTATUS Stat = STA_NOINIT;  /* Disk Status */
-uint16_t Timer1, Timer2; 		/* 1ms Timer Counters */
-static uint8_t CardType; 		/* Type 0:MMC, 1:SDC, 2:Block addressing */
-static uint8_t PowerFlag = 0;	/* Power flag */
+SD::SD(SPI_HandleTypeDef* hspi) {
+  this->HSPI_SDCARD = hspi;
+}
+
+SD::~SD() {}
 
 /* initialize SD */
 DSTATUS SD::SD_disk_initialize(uint8_t drv) {

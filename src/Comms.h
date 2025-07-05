@@ -21,6 +21,10 @@ typedef struct __attribute__((__packed__)) CommsMsgHeader {
     uint8_t isHeadValid() {
         return (head[0] == COMMS_HEADER[0]) && (head[1] == COMMS_HEADER[1]);
     }
+
+    uint16_t getPayloadLength() {
+        return length - COMMS_HEADER_LEN - COMMS_CRC_LEN;
+    }
 } CommsMsgHeader;
 
 typedef struct CommsMsg {
@@ -57,6 +61,7 @@ class Comms {
 
     public:
     uint32_t id = COMMS_MULTICAST_ID;
+    uint16_t crcErrorCount = 0;
 };
 
 #endif // COMMS_h

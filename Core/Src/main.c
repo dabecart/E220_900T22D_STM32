@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "MainMCU.h"
+#include "CCalls.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -89,7 +89,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  initSD(&hspi2);
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -110,9 +110,9 @@ int main(void)
     Error_Handler();
   }
   /* USER CODE BEGIN 2 */
-  MainMCU mcu(&huart1, &hdma_usart1_rx, &hdma_usart1_tx, // LoRa
-              &huart2, &hdma_usart2_rx, &hdma_usart2_tx, // uBLOX
-              &hspi1);
+  initMainMCU(&huart1, &hdma_usart1_rx, &hdma_usart1_tx, // LoRa
+              &huart2, &hdma_usart2_rx, &hdma_usart2_tx,   // uBLOX
+              &hspi1);                                     // TFT
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -122,7 +122,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  mcu.mainLoop();
+	  loopMainMCU();
   }
   /* USER CODE END 3 */
 }

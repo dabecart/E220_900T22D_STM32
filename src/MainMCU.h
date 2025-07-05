@@ -2,7 +2,6 @@
 #define MAIN_MCU_h
 
 #include "stm32g4xx_hal.h"
-#include <stdio.h>
 // #include "usb_device.h"
 // #include "usbd_cdc_if.h"
 #include "UART.h"
@@ -35,6 +34,8 @@ class MainMCU {
      * @brief Destroy the MainMCU object.
      */
     ~MainMCU();
+
+    void initMCU();
 
     /**
      * @brief Main routine of the MCU. 
