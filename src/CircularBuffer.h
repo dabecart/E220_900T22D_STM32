@@ -15,7 +15,7 @@
 #include <string.h>
 #include <stdint.h>
 
-#define CIRCULAR_BUFFER_MAX_SIZE 600
+#define CIRCULAR_BUFFER_MAX_SIZE 1024
 
 class CircularBuffer {
     public:
@@ -85,6 +85,17 @@ class CircularBuffer {
      * @return uint8_t 1 if the read items are valid. 
      */
     uint8_t peekN(uint32_t count, uint8_t* items);
+
+    /**
+     * @brief Reads a bytes from a CircularBuffer at position "index". Does not advance the head 
+     * index.
+     * 
+     * @param pCB. Pointer to the CircularBuffer struct.
+     * @param index. The index into the array to look at.
+     * @param items. Where the peeked byte will be stored.
+     * @return 1 if the read item is valid. 
+     */
+    uint8_t peekAt(uint32_t index, uint8_t* item);
 
     /**
      * @brief The DMA functions automatically treats a buffer as a circular buffer. The callbacks 

@@ -60,7 +60,7 @@ void MainMCU::mainLoop() {
     }
 
     if(nmea.update()) {
-        gui.updateNMEA(nmea.latitude, nmea.longitude, nmea.altitude, nmea.time, nmea.fixQuality, nmea.satellitesUsed);
+        gui.updateNMEA(&nmea);
     }
 
     uartLoRa.update();

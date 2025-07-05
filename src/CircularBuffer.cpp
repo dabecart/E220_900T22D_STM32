@@ -114,6 +114,22 @@ uint8_t CircularBuffer::peekN(uint32_t count, uint8_t* items) {
     return 1;
 }
 
+uint8_t CircularBuffer::peekAt(uint32_t index, uint8_t* item) {
+    if(item == NULL) return 0;
+
+    if(len <= index) return 0;
+    
+    uint32_t nextTail = tail + index;
+    if(nextTail > size) {
+        uint32_t tailBytes = size - tail;
+        *item = data[index - tailBytes];
+    }else {
+        *item = data[tail + index];
+    }
+
+    return 1;
+}
+
 // Useful for DMA circular buffers.
 uint8_t CircularBuffer::updateIndices(uint32_t newHeadIndex)
 {
