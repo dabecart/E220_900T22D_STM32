@@ -1,2 +1,7 @@
 Debug/
 Release/
+.venv/
+__pycache__/
+*.txt
+
+!requirements.txt
