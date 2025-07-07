@@ -36,6 +36,11 @@ class UART {
     ~UART();
 
     /**
+     * @brief Attaches the DMA ports.
+     */
+    void init();
+
+    /**
      * @brief Update the UART RX buffers.
      */
     void update();

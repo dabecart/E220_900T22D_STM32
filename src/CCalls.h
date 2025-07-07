@@ -14,7 +14,6 @@
 extern "C" {
 #endif
 
-void initSD(SPI_HandleTypeDef* hspi);
 void updateSDTimers();
 DSTATUS SD_disk_initialize(uint8_t pdrv);
 DSTATUS SD_disk_status(uint8_t pdrv);
@@ -22,14 +21,18 @@ DRESULT SD_disk_read(uint8_t pdrv, uint8_t* buff, uint32_t sector, uint16_t coun
 DRESULT SD_disk_write(uint8_t pdrv, const uint8_t* buff, uint32_t sector, uint16_t count);
 DRESULT SD_disk_ioctl(uint8_t pdrv, uint8_t cmd, void* buff);
 
-void initMainMCU(UART_HandleTypeDef* huart1,
+void createMainMCU(UART_HandleTypeDef* huart1,
                  DMA_HandleTypeDef*  hdma_usart1_rx,
                  DMA_HandleTypeDef*  hdma_usart1_tx,
                  UART_HandleTypeDef* huart2,
                  DMA_HandleTypeDef*  hdma_usart2_rx,
                  DMA_HandleTypeDef*  hdma_usart2_tx,
-                 SPI_HandleTypeDef*  hspi1);
+                 SPI_HandleTypeDef*  hspi1,
+                 SPI_HandleTypeDef*  hspi2);
+void initMainMCU();
 void loopMainMCU();
+
+void toggleLoggingIRQ();
 
 #ifdef __cplusplus
 }

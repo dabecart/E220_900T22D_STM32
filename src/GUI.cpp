@@ -31,10 +31,10 @@ void GUI::updateLoRa(char* msg, uint16_t msgLen, int16_t rssi, uint8_t channel, 
     fillGridCage(0, 4, tempBuffer, WHITE, BLACK);
 
     snprintf(tempBuffer, sizeof(tempBuffer), "CRC: %d", crcErrors);
-    fillGridCage(0, 10, tempBuffer, WHITE, BLACK);
+    fillGridCage(0, 9, tempBuffer, WHITE, BLACK);
 
     snprintf(tempBuffer, sizeof(tempBuffer), "Ch. %d", channel);
-    fillGridCage(0, 11, tempBuffer, WHITE, BLACK);
+    fillGridCage(0, 10, tempBuffer, WHITE, BLACK);
 }
 
 void GUI::updateNMEA(const NMEA* nmea) {
@@ -54,10 +54,21 @@ void GUI::updateNMEA(const NMEA* nmea) {
     fillGridCage(1, 6, tempBuffer, WHITE, BLACK);
 
     snprintf(tempBuffer, sizeof(tempBuffer), "Fix: %d", nmea->fixQuality);
-    fillGridCage(1, 10, tempBuffer, WHITE, BLACK);
+    fillGridCage(1, 9, tempBuffer, WHITE, BLACK);
 
     snprintf(tempBuffer, sizeof(tempBuffer), "Sats: %d", nmea->satellitesUsed);
-    fillGridCage(1, 11, tempBuffer, WHITE, BLACK);
+    fillGridCage(1, 10, tempBuffer, WHITE, BLACK);
+}
+
+void GUI::updateSD(uint8_t mounted, uint8_t recording, uint32_t recFileSize) {
+    static uint32_t lastTimeHere = 0;
+    if((HAL_GetTick() - lastTimeHere) < 1000) return;
+
+    lastTimeHere = HAL_GetTick();
+    tft.fillRectangle(0, 12*GRID_CELL_HEIGHT-3, tft.width, GRID_CELL_HEIGHT+3, WHITE);
+    snprintf(tempBuffer, sizeof(tempBuffer), "M:%d R:%d %ld", 
+             mounted, recording, recFileSize);
+    tft.writeString(0, 12*GRID_CELL_HEIGHT-2, tempBuffer, FONT, BLACK, WHITE);
 }
 
 void GUI::fillGridCage(uint16_t x, uint16_t y, const char* msg, uint16_t fontColor, uint16_t backColor) {

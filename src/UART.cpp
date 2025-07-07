@@ -18,11 +18,13 @@ UART::UART(UART_HandleTypeDef*     hUART,
     this->hUART        = hUART;
     this->rxDMA        = rxDMA; 
     this->txDMA        = txDMA;
-
-    attachDMAToSerialPort();
 }
 
 UART::~UART() {}
+
+void UART::init() {
+    attachDMAToSerialPort();
+}
 
 void UART::update() {
     if(txSend) {

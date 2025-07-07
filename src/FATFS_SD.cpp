@@ -362,7 +362,7 @@ uint8_t SD::SD_RxDataBlock(uint8_t *buff, uint16_t len) {
 /* transmit data block */
 #if _USE_WRITE == 1
 uint8_t SD::SD_TxDataBlock(const uint8_t *buff, uint8_t token) {
-  uint8_t resp;
+  uint8_t resp = 0;
   uint8_t i = 0;
   /* wait SD ready */
   if (SD_ReadyWait() != 0xFF) return 0;

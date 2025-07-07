@@ -8,6 +8,8 @@
 #include "GUI.h"
 #include "Comms.h"
 #include "NMEA.h"
+#include "FATFS_SD.h"
+#include "SDLogger.h"
 
 class MainMCU {
     public:
@@ -21,6 +23,7 @@ class MainMCU {
      * @param hdma_usart2_rx. Handler to the DMA_UART2_RX.
      * @param hdma_usart2_tx. Handler to the DMA_UART2_TX.
      * @param hspi1. Handler to the TFT SPI.
+     * @param hspi2. Handler to the SD SPI.
      */
     MainMCU(UART_HandleTypeDef* huart1,
             DMA_HandleTypeDef*  hdma_usart1_rx,
@@ -28,14 +31,15 @@ class MainMCU {
             UART_HandleTypeDef* huart2,
             DMA_HandleTypeDef*  hdma_usart2_rx,
             DMA_HandleTypeDef*  hdma_usart2_tx,
-            SPI_HandleTypeDef*  hspi1);
+            SPI_HandleTypeDef*  hspi1,
+            SPI_HandleTypeDef*  hspi2);
 
     /**
      * @brief Destroy the MainMCU object.
      */
     ~MainMCU();
 
-    void initMCU();
+    void init();
 
     /**
      * @brief Main routine of the MCU. 
@@ -47,6 +51,9 @@ class MainMCU {
     Comms comms;
     NMEA nmea;
     GUI gui;
+    SD sd;
+    SDLogger log;
+    char buf[200];
 };
 
 extern MainMCU* mcu;

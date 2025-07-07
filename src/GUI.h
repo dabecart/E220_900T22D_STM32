@@ -20,6 +20,7 @@ class GUI {
 
     void updateLoRa(char* msg, uint16_t msgLen, int16_t rssi, uint8_t channel, uint16_t crcErrors);
     void updateNMEA(const NMEA* nmea);
+    void updateSD(uint8_t mounted, uint8_t recording, uint32_t recFileSize);
 
     private:
     void fillGridCage(uint16_t x, uint16_t y, const char* msg, uint16_t fontColor, uint16_t backColor);

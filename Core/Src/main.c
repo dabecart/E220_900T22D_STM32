@@ -89,7 +89,11 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  initSD(&hspi2);
+  createMainMCU(&huart1, &hdma_usart1_rx, &hdma_usart1_tx,   // LoRa
+                &huart2, &hdma_usart2_rx, &hdma_usart2_tx,   // uBLOX
+                &hspi1,                                      // TFT
+                &hspi2                                       // SD card
+               );
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -110,9 +114,7 @@ int main(void)
     Error_Handler();
   }
   /* USER CODE BEGIN 2 */
-  initMainMCU(&huart1, &hdma_usart1_rx, &hdma_usart1_tx, // LoRa
-              &huart2, &hdma_usart2_rx, &hdma_usart2_tx,   // uBLOX
-              &hspi1);                                     // TFT
+  initMainMCU();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -388,9 +390,9 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -401,6 +403,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, TFT_RESET_Pin|SD_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : REC_BUTTON_Pin */
+  GPIO_InitStruct.Pin = REC_BUTTON_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(REC_BUTTON_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TFT_CS_Pin LORA_M1_Pin LORA_M0_Pin */
   GPIO_InitStruct.Pin = TFT_CS_Pin|LORA_M1_Pin|LORA_M0_Pin;
@@ -428,6 +436,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(LORA_AUX_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
